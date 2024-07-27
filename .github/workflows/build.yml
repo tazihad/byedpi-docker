@@ -46,7 +46,8 @@ jobs:
         RUN apk update && apk add --no-cache \
             git \
             build-base \
-            cmake \
+            meson \
+            ninja \
             openssl-dev \
             libpcap-dev \
             tor \
@@ -56,9 +57,10 @@ jobs:
         RUN git clone https://github.com/hufrea/byedpi /opt/byedpi
 
         WORKDIR /opt/byedpi
-        RUN mkdir build && cd build && cmake .. && make
+        RUN meson build && ninja -C build
 
         ENTRYPOINT ["./build/src/ciadpi"]
         EOF
 
         docker build -t byedpi .
+        docker run --rm byedpi --ip 127.0.0.1 --port 60010 --disorder 3 --fake -1 --ttl 3 --auto=torst --tlsrec 1+s --debug 1
