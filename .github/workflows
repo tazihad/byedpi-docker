@@ -1,22 +1,44 @@
-name: Build and Run ciadpi with Docker
+name: Check for New Release and Build Docker
 
 on:
-  repository_dispatch:
-    types: [byedpi_release]
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  workflow_dispatch:
 
 jobs:
-  build-and-run:
+  check-release:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Create Dockerfile
+    - name: Get latest release info
+      id: get_release
       run: |
+        latest_release=$(curl -s https://api.github.com/repos/hufrea/byedpi/releases/latest)
+        echo "::set-output name=tag::$(echo $latest_release | jq -r .tag_name)"
+        echo "::set-output name=published_at::$(echo $latest_release | jq -r .published_at)"
+    
+    - name: Compare with last known release
+      id: compare_release
+      run: |
+        last_known_release=$(cat .last_known_release || echo "")
+        latest_release=${{ steps.get_release.outputs.published_at }}
+        if [ "$latest_release" != "$last_known_release" ]; then
+          echo "New release found"
+          echo "::set-output name=new_release::true"
+          echo $latest_release > .last_known_release
+        else
+          echo "No new release"
+          echo "::set-output name=new_release::false"
+        fi
+    
+    - name: Build and run Docker if new release
+      if: steps.compare_release.outputs.new_release == 'true'
+      run: |
+        echo "New release detected, building and running Docker..."
+        
         cat <<EOF > Dockerfile
         FROM alpine:latest
 
@@ -36,6 +58,4 @@ jobs:
         ENTRYPOINT ["./build/src/ciadpi"]
         EOF
 
-    - name: Build Docker image
-      run: docker build -t byedpi .
-
+        docker build -t byedpi .
