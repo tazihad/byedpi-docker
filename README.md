@@ -2,12 +2,12 @@ Usage:
 
 **Docker**
 ```
-docker run --rm tazihad/byedpi --ip 127.0.0.1 --port 60010 --disorder 3 --fake -1 --ttl 3 --auto=torst --tlsrec 1+s --debug 1
+docker run --rm -p 127.0.0.1:1080:1080 --name byedpi tazihad/byedpi --disorder 1 --fake 0 --ttl 1 --auto=torst --tlsrec 1+s --debug 1
 ```
 
 **Podman**
 ```
-podman run --rm docker.io/tazihad/byedpi --ip 127.0.0.1 --port 60010 --disorder 3 --fake -1 --ttl 3 --auto=torst --tlsrec 1+s --debug 1
+podman run --rm -p 127.0.0.1:1080:1080 --name byedpi tazihad/byedpi --disorder 1 --fake 0 --ttl 1 --auto=torst --tlsrec 1+s --debug 1
 ```
 
 Adjust config.
