@@ -56,8 +56,10 @@ jobs:
 
         WORKDIR /opt/byedpi
         RUN make
+        
+        EXPOSE 1080
 
-        ENTRYPOINT ["./ciadpi"]
+        ENTRYPOINT ["/opt/byedpi/ciadpi"]
         EOF
 
         docker build -t byedpi .
