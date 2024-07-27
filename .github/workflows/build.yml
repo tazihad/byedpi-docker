@@ -46,8 +46,6 @@ jobs:
         RUN apk update && apk add --no-cache \
             git \
             build-base \
-            meson \
-            ninja \
             openssl-dev \
             libpcap-dev \
             tor \
@@ -59,8 +57,7 @@ jobs:
         WORKDIR /opt/byedpi
         RUN make
 
-        ENTRYPOINT ["./build/src/ciadpi"]
+        ENTRYPOINT ["./ciadpi"]
         EOF
 
         docker build -t byedpi .
-        docker run --rm byedpi --ip 127.0.0.1 --port 60010 --disorder 3 --fake -1 --ttl 3 --auto=torst --tlsrec 1+s --debug 1
