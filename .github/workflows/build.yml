@@ -47,7 +47,7 @@ jobs:
         echo "New release detected, building and pushing Docker..."
         
         cat <<EOF > Dockerfile
-        FROM alpine:latest
+        FROM alpine:latest AS build
 
         RUN apk update && apk add --no-cache \
             git \
@@ -63,6 +63,9 @@ jobs:
         WORKDIR /opt/byedpi
         RUN make
         
+        FROM alpine:latest
+
+        COPY --from=build /opt /opt
         EXPOSE 1080
 
         ENTRYPOINT ["/opt/byedpi/ciadpi"]
