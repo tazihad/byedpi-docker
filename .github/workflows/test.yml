@@ -1,0 +1,83 @@
+name: test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get latest release info
+      id: get_release
+      run: |
+        latest_release=$(curl -s https://api.github.com/repos/hufrea/byedpi/releases/latest)
+        echo "Latest release info: $latest_release"
+        echo "::set-output name=tag::$(echo $latest_release | jq -r .tag_name)"
+        echo "::set-output name=published_at::$(echo $latest_release | jq -r .published_at)"
+
+    - name: Compare with last known release
+      id: compare_release
+      run: |
+        last_known_release=$(cat .last_known_release 2>/dev/null || echo "")
+        latest_release=${{ steps.get_release.outputs.published_at }}
+        if [ "$latest_release" != "$last_known_release" ]; then
+          echo "New release found: $latest_release"
+          echo "::set-output name=new_release::true"
+          echo $latest_release > .last_known_release
+        else
+          echo "No new release. Last known release: $last_known_release"
+          echo "::set-output name=new_release::false"
+        fi
+
+    - name: Set up Docker Buildx
+      if: steps.compare_release.outputs.new_release == 'true'
+      run: |
+        echo "New release detected, building and pushing Docker..."
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Docker Hub
+      if: steps.compare_release.outputs.new_release == 'true'
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push multi-arch Docker image
+      if: steps.compare_release.outputs.new_release == 'true'
+      run: |
+        cat <<EOF > Dockerfile
+        # syntax=docker/dockerfile:1.4
+        FROM --platform=\$BUILDPLATFORM alpine:latest AS build
+
+        ARG TARGETPLATFORM
+        ARG BUILDPLATFORM
+
+        RUN apk update && apk add --no-cache \
+            git \
+            build-base \
+            openssl-dev \
+            libpcap-dev \
+            tor \
+            linux-headers \
+            musl-dev
+
+        RUN git clone https://github.com/hufrea/byedpi /opt/byedpi
+
+        WORKDIR /opt/byedpi
+        RUN make
+
+        FROM alpine:latest
+
+        COPY --from=build /opt /opt
+        EXPOSE 1080
+
+        ENTRYPOINT ["/opt/byedpi/ciadpi"]
+        EOF
+
+        docker buildx build --platform linux/amd64,linux/arm/v7,linux/aarch64 \
+          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ steps.get_release.outputs.tag }} \
+          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test --push .
