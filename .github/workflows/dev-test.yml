@@ -1,14 +1,9 @@
 name: dev-test
 
 on:
-  pull_request:
-    branches:
-      - dev
   push:
     branches:
-      - dev    
-  schedule:
-    - cron: '5 12 * * 0' # Runs every week at 12:05 PM UTC on Sunday
+      - dev
   workflow_dispatch:
 
 jobs:
