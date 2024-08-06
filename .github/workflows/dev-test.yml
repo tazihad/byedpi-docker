@@ -56,8 +56,10 @@ jobs:
           --platform linux/arm/v7 \
           --platform linux/aarch64 \
           --platform linux/ppc64le \
-          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} \
+          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
           --output type=docker,dest=byedpi.tar
+#          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} \
+#          --output type=docker,dest=byedpi.tar
 
     - name: Load Docker image
       if: env.new_release == 'true'
