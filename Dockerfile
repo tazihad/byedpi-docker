@@ -5,7 +5,6 @@ FROM alpine:latest AS build
             build-base \
             openssl-dev \
             libpcap-dev \
-            tor \
             linux-headers \
             musl-dev
 
