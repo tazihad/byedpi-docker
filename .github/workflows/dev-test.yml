@@ -61,5 +61,12 @@ jobs:
 
     - name: Build multi arch docker
       run: |
-        docker buildx build --platform linux/amd64,linux/arm/v7,linux/aarch64 \
-          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test --push .
+        docker buildx build \
+          --platform linux/amd64 \
+          --platform linux/arm/v7 \
+          --platform linux/aarch64 \
+          --platform linux/mips \
+          --platform linux/mipsel \
+          --platform linux/ppc64le \
+          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
+          --push .
