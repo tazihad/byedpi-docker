@@ -1,16 +1,11 @@
-name: Check for New Release and Build Docker
+name: dev-test
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
-      - main    
-  schedule:
-    - cron: '5 12 * * 0' # Runs every week
+      - dev
   workflow_dispatch:
-  
+
 jobs:
   check-release:
     runs-on: ubuntu-latest
@@ -67,3 +62,8 @@ jobs:
           -t ${{ secrets.DOCKER_USERNAME }}/byedpi:latest \
           --push \
           .
+
+         
+    
+
+        
