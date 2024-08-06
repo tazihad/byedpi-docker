@@ -65,8 +65,6 @@ jobs:
           --platform linux/amd64 \
           --platform linux/arm/v7 \
           --platform linux/aarch64 \
-          --platform linux/mips \
-          --platform linux/mipsel \
           --platform linux/ppc64le \
           -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
           --push .
