@@ -34,6 +34,7 @@ jobs:
         else
           echo "No new release. Last known release: $last_known_release"
           echo "new_release=false" >> $GITHUB_ENV
+        fi
         
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
