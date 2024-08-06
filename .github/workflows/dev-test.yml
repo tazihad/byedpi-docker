@@ -55,14 +55,11 @@ jobs:
           --platform linux/arm/v7 \
           --platform linux/aarch64 \
           --platform linux/ppc64le \
-          -t ${{ secrets.DOCKER_USERNAME }}/byedpi \
+          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
           --push \
           .
 
-    - name: Push Docker image to Docker Hub
-      run: |
-        docker tag byedpi ${{ secrets.DOCKER_USERNAME }}/byedpi:test
-        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
+
 
          
     
