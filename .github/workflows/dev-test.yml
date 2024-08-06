@@ -48,7 +48,6 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Build multi arch if new release
-      if: env.new_release == 'false'
       run: |
         echo "New release detected, building and pushing Docker..."
         docker buildx build \
@@ -61,7 +60,6 @@ jobs:
           .
 
     - name: Push built image to Docker Hub
-      if: env.new_release == 'false'
       run: |
         docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker tag ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} ${{ secrets.DOCKER_USERNAME }}/byedpi:test
