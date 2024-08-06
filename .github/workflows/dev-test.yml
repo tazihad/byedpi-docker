@@ -60,7 +60,7 @@ jobs:
           .
 
     - name: Push built image to Docker Hub
-      if: steps.compare_release.outputs.new_release == 'true'
+#      if: steps.compare_release.outputs.new_release == 'true'
       run: |
         docker tag byedpi ${{ secrets.DOCKER_USERNAME }}/byedpi:test
         docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
