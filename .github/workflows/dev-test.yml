@@ -60,12 +60,11 @@ jobs:
           --push \
           .
 
-    - name: Push built image to Docker Hub
+    - name: Push Docker image to Docker Hub
       run: |
-#        docker tag ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} ${{ secrets.DOCKER_USERNAME }}/byedpi:test
-#        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
-#        docker tag byedpi ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ steps.get_release.outputs.tag }}
-#        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ steps.get_release.outputs.tag }}
+        docker tag byedpi ${{ secrets.DOCKER_USERNAME }}/byedpi:test
+        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
+
          
     
 
