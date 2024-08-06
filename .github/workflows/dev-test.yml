@@ -19,21 +19,21 @@ jobs:
       run: |
         latest_release=$(curl -s https://api.github.com/repos/hufrea/byedpi/releases/latest)
         echo "Latest release info: $latest_release"
-        echo "::set-output name=tag::$(echo $latest_release | jq -r .tag_name)"
-        echo "::set-output name=published_at::$(echo $latest_release | jq -r .published_at)"
+        echo "tag=$(echo $latest_release | jq -r .tag_name)" >> $GITHUB_ENV
+        echo "published_at=$(echo $latest_release | jq -r .published_at)" >> $GITHUB_ENV
     
     - name: Compare with last known release
       id: compare_release
       run: |
         last_known_release=$(cat .last_known_release 2>/dev/null || echo "")
-        latest_release=${{ steps.get_release.outputs.published_at }}
+        latest_release=$GITHUB_ENV_published_at
         if [ "$latest_release" != "$last_known_release" ]; then
           echo "New release found: $latest_release"
-          echo "::set-output name=new_release::true"
+          echo "new_release=true" >> $GITHUB_ENV
           echo $latest_release > .last_known_release
         else
           echo "No new release. Last known release: $last_known_release"
-          echo "::set-output name=new_release::false"
+          echo "new_release=false" >> $GITHUB_ENV
         fi
     
     - name: Build if new release
