@@ -12,4 +12,11 @@ podman run --rm -p 127.0.0.1:1080:1080 --name byedpi tazihad/byedpi --disorder 1
 
 Adjust config.
 
+**Use socks5**  
+```
+socks5://127.0.0.1:1080
+```
+
+
+
 [ByeDPI project](https://github.com/hufrea/byedpi)
