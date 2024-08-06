@@ -53,6 +53,7 @@ jobs:
         echo "New release detected, building and pushing Docker..."
         docker buildx build \
           --platform linux/amd64 \
+          --platform linux/arm64 \
           --platform linux/arm/v7 \
           --platform linux/aarch64 \
           --platform linux/ppc64le \
@@ -66,6 +67,13 @@ jobs:
 #      if: env.new_release == 'true'
       run: |
         docker load -i byedpi.tar
+
+        - name: Build the image
+          uses: docker/build-push-action@v5
+          with:
+            context: byedpi
+            platforms: linux/amd64, linux/arm64, linux/arm/v7, linux/aarch64, linux/ppc64le
+            load: true
 
     - name: Push built image to Docker Hub
 #      if: env.new_release == 'true'
