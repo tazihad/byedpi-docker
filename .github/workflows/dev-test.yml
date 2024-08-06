@@ -59,11 +59,6 @@ jobs:
           --output type=docker \
           .
 
-    - name: Push Docker image
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
-#        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }}
-
          
     
 
