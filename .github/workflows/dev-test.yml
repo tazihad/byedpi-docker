@@ -57,20 +57,19 @@ jobs:
           --platform linux/aarch64 \
           --platform linux/ppc64le \
           -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
-          --output type=oci,dest=byedpi.tar \
+          --output type=docker,dest=byedpi.tar \
           .
 #          -t ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} \
 #          --output type=docker,dest=byedpi.tar
 
-    - name: Load Docker image
+    - name: Load image into Docker
       if: env.new_release == 'true'
       run: |
-        docker buildx imagetools create --tag ${{ secrets.DOCKER_USERNAME }}/byedpi:test byedpi.tar
+        docker load -i byedpi.tar
 
     - name: Push built image to Docker Hub
 #      if: env.new_release == 'true'
       run: |
-        docker tag ${{ secrets.DOCKER_USERNAME }}/byedpi:test ${{ secrets.DOCKER_USERNAME }}/byedpi:test
         docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker tag ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
