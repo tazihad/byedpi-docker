@@ -65,7 +65,7 @@ jobs:
     - name: Load Docker image
       if: env.new_release == 'true'
       run: |
-        docker load -i byedpi.tar 
+        docker buildx imagetools create --tag ${{ secrets.DOCKER_USERNAME }}/byedpi:test byedpi.tar
 
     - name: Push built image to Docker Hub
 #      if: env.new_release == 'true'
