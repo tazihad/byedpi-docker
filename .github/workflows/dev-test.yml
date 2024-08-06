@@ -1,4 +1,4 @@
-name: Check for New Release and Build Docker
+name: dev-test
 
 on:
   pull_request:
