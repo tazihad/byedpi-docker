@@ -56,7 +56,7 @@ jobs:
           --platform linux/aarch64 \
           --platform linux/ppc64le \
           -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
-          --output type=docker \
+          --push \
           .
 
          
