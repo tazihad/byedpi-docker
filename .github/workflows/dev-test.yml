@@ -57,11 +57,11 @@ jobs:
           --platform linux/aarch64 \
           --platform linux/ppc64le \
           -t ${{ secrets.DOCKER_USERNAME }}/byedpi:test \
+          --push \
           .
 
     - name: Push built image to Docker Hub
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker tag ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ env.tag }} ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker push ${{ secrets.DOCKER_USERNAME }}/byedpi:test
 #        docker tag byedpi ${{ secrets.DOCKER_USERNAME }}/byedpi:${{ steps.get_release.outputs.tag }}
