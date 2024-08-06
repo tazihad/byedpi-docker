@@ -52,7 +52,6 @@ jobs:
         echo "New release detected, building and pushing Docker..."
         docker buildx build \
           --platform linux/amd64 \
-          --platform linux/arm64 \
           --platform linux/arm/v7 \
           --platform linux/aarch64 \
           --platform linux/ppc64le \
